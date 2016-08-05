@@ -1,0 +1,30 @@
+# Magento 2 module for Whoops
+================================
+This module adds [Whoops](https://filp.github.io/whoops/) error handling to Magento 2.
+
+Requirements:
+* Magento 2.0.0 Stable or higher
+
+We recommend `composer` to install this package. However, if you want a manual copy instead, these are the steps:
+* Upload the files in the `source/` folder to the folder `app/code/Yireo/Whoops` of your site
+* Run `php -f bin/magento module:enable Yireo_Whoops`
+* Run `php -f bin/magento setup:upgrade`
+* Flush the Magento cache
+* Done
+
+## Overview
+This module replaces the default error and exception handling of Magento 2, and replaces it with [Whoops](https://filp.github.io/whoops/).
+If you want to know what Whoops is, check out their site.
+
+## Usage
+There is no usage. This module replaces the default `Magento\Framework\App\Http` class with its own and then adds in Whoops. This means that whenever an exception or error is not caught in the code, it will be outputted using Whoops.
+
+You can test for this yourself by adding some dummy code somewhere in Magento 2:
+
+    trigger_error('test');
+    
+or:
+
+    throw new RuntimeException('test');
+
+That's how we tested things.
