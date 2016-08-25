@@ -10,21 +10,30 @@
 
 namespace Yireo\Whoops\Plugin;
 
+use Exception;
+use Magento\Framework\App\Bootstrap;
+use Magento\Framework\App\Http as MagentoHttp;
+use Whoops\Handler\PrettyPageHandler;
+use Whoops\Run as WhoopsRun;
+
 /**
  * Class HttpApp - Plugin for \Magento\Framework\App\Http
  */
 class HttpApp
 {
-    public function beforeCatchException(
-        \Magento\Framework\App\Http $subject,
-        \Magento\Framework\App\Bootstrap $bootstrap,
-        \Exception $exception
-    )
+    /**
+     * @param MagentoHttp $subject
+     * @param Bootstrap $bootstrap
+     * @param Exception $exception
+     *
+     * @return array
+     */
+    public function beforeCatchException(MagentoHttp $subject, Bootstrap $bootstrap, Exception $exception)
     {
         if ($bootstrap->isDeveloperMode()) {
 
-            $run = new \Whoops\Run;
-            $handler = new \Whoops\Handler\PrettyPageHandler;
+            $run = new WhoopsRun;
+            $handler = new PrettyPageHandler;
             $run->pushHandler($handler);
 
             $run->handleException($exception);
