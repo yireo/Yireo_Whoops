@@ -1,0 +1,55 @@
+# Magerun
+/n98-magerun2.phar
+
+# Sphinx documentation
+doc/_build/
+doc/_chapter/
+
+# Zend Studio / Eclipse
+.settings/
+.buildpath
+.project
+.tmp_*
+
+# PHPStorm
+.idea/
+.phpstorm.meta.php
+
+# Netbeans
+nbproject/
+
+# SQL files
+*.sql
+*.sql.gz
+*.sql.zip
+
+# MacOS
+.DS_Store
+
+# Ubuntu
+.directory
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Python
+*.pyc
+
+# Phpunit
+phpunit.xml
+
+# Temporary test files
+foo.php
+test.php
+pdf.php
+test.xml
+phpinfo.php
+
+var/
+vendor/
+pub/
+
+!/composer.json
+!/composer.lock
+!/.gitignore
