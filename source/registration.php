@@ -1,8 +1,8 @@
 <?php
 /**
- * Kint module for Magento
+ * Whoops module for Magento
  *
- * @package     Yireo_Kint
+ * @package     Yireo_Whoops
  * @author      Yireo (https://www.yireo.com/)
  * @copyright   Copyright 2016 Yireo (https://www.yireo.com/)
  * @license     Open Source License
