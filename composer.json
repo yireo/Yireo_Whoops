@@ -2,8 +2,8 @@
     "name": "yireo/yireo_whoops",
     "license": "OSL-3",
     "type": "magento2-module",
-    "version": "0.0.1",
-    "homepage": "git remote add origin git@github.com:yireo/Yireo_Whoops.git",
+    "version": "0.0.2",
+    "homepage": "https://github.com/yireo/Yireo_Whoops",
     "description": "Magento 2 module adding Whoops error handling",
     "keywords":[ "composer-installer", "magento"],
     "authors": [
