@@ -1,5 +1,5 @@
 # Magento 2 module for Whoops
-================================
+
 This module adds [Whoops](https://filp.github.io/whoops/) error handling to Magento 2.
 
 Requirements:
