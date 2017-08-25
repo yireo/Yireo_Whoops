@@ -28,7 +28,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Yireo\\Whoops\\": "source"
+            "Yireo\\Whoops\\": ""
         },        
         "files": [
             "source/registration.php"
