@@ -31,7 +31,7 @@
             "Yireo\\Whoops\\": ""
         },        
         "files": [
-            "source/registration.php"
+            "registration.php"
         ]
     }
 }
