@@ -10,7 +10,7 @@ Use composer to install this extension. First make sure that Magento is installe
 
 Next, install our module using the following command:
 
-    composer require yireo/magento2-whoops
+    composer require --dev yireo/magento2-whoops
 
 Next, install the new module into Magento itself:
 
