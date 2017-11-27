@@ -20,8 +20,9 @@ class Http extends \Magento\Framework\App\Http
 
             $run = new \Whoops\Run;
             $handler = new \Whoops\Handler\PrettyPageHandler;
-            $run->pushHandler($handler);
 
+
+            $run->pushHandler($handler);
             $run->handleException($exception);
         }
 

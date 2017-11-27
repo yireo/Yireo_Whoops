@@ -1,37 +1,45 @@
 {
-    "name": "yireo/magento2-whoops",
-    "license": "OSL-3.0",
-    "type": "magento2-module",
-    "homepage": "https://www.yireo.com/software/magento-extensions/extension/153-whoops/category/2",
-    "description": "Magento 2 module adding Whoops error handling",
-    "keywords":[ "composer-installer", "magento", "Whoops", "Magento 2", "Exception", "Yireo"],
-    "authors": [
-        {
-            "name": "Jisse Reitsma (Yireo)",
-            "email": "jisse@yireo.com"
-        }
-    ],
-    "require": {
-        "magento/framework": "^100.1.0|^101.0.0",
-        "filp/whoops": "^2.1",
-        "php": ">=7.0.0"
-    },
-    "require-dev":{
-        "phpunit/phpunit":"*",
-        "composer/composer":"*@dev"
-    },
-    "repositories": {
-        "magento": {
-            "type": "composer",
-            "url": "https://repo.magento.com/"
-        }
-    },
-    "autoload": {
-        "psr-4": {
-            "Yireo\\Whoops\\": ""
-        },        
-        "files": [
-            "registration.php"
-        ]
+  "name": "yireo/magento2-whoops",
+  "license": "OSL-3.0",
+  "type": "magento2-module",
+  "homepage": "https://www.yireo.com/software/magento-extensions/extension/153-whoops/category/2",
+  "description": "Magento 2 module adding Whoops error handling",
+  "keywords": [
+    "composer-installer",
+    "magento",
+    "Whoops",
+    "Magento 2",
+    "Exception",
+    "Yireo"
+  ],
+  "authors": [
+    {
+      "name": "Jisse Reitsma (Yireo)",
+      "email": "jisse@yireo.com"
     }
+  ],
+  "require": {
+    "magento/framework": "^100.1.0|^101.0.0",
+    "filp/whoops": "^2.1",
+    "symfony/var-dumper": "3.2",
+    "php": ">=7.0.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "*",
+    "composer/composer": "*@dev"
+  },
+  "repositories": {
+    "magento": {
+      "type": "composer",
+      "url": "https://repo.magento.com/"
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Yireo\\Whoops\\": ""
+    },
+    "files": [
+      "registration.php"
+    ]
+  }
 }
