@@ -15,6 +15,25 @@ namespace Yireo\Whoops\Plugin;
  */
 class HttpApp
 {
+    /**
+     * @var \Whoops\Run
+     */
+    private $whoopsRunner;
+
+    /**
+     * @var \Whoops\Handler\PrettyPageHandler
+     */
+    private $pageHandler;
+
+    public function __construct(
+        \Whoops\Run $whoopsRunner,
+        \Whoops\Handler\PrettyPageHandler $pageHandler
+    )
+    {
+        $this->whoopsRunner = $whoopsRunner;
+        $this->pageHandler = $pageHandler;
+    }
+
     public function beforeCatchException(
         \Magento\Framework\App\Http $subject,
         \Magento\Framework\App\Bootstrap $bootstrap,
@@ -23,15 +42,12 @@ class HttpApp
     {
         if ($bootstrap->isDeveloperMode()) {
 
-            $run = new \Whoops\Run;
-
             // @todo: Create a configuration option for this
             //$handler = new \Whoops\Handler\PlainTextHandler;
             //$handler->setTraceFunctionArgsOutputLimit(64);
-            $handler = new \Whoops\Handler\PrettyPageHandler;
-            $run->pushHandler($handler);
+            $this->whoopsRunner->pushHandler($this->pageHandler);
 
-            $run->handleException($exception);
+            $this->whoopsRunner->handleException($exception);
         }
 
         return [$bootstrap, $exception];
