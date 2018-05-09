@@ -21,7 +21,7 @@
   "require": {
     "magento/framework": "^100.1.0|^101.0.0",
     "filp/whoops": "^2.1",
-    "symfony/var-dumper": "3.2.*",
+    "symfony/var-dumper": "*",
     "php": ">=7.0.0"
   },
   "require-dev": {
