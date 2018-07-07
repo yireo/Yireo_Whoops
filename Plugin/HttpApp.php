@@ -7,8 +7,15 @@
  * @copyright   Copyright 2016 Yireo (https://www.yireo.com/)
  * @license     Open Source License (OSL v3)
  */
+declare(strict_types=1);
 
 namespace Yireo\Whoops\Plugin;
+
+use Exception;
+use Magento\Framework\App\Bootstrap;
+use Magento\Framework\App\Http;
+use Whoops\Handler\PrettyPageHandler;
+use Whoops\Run as WhoopsRunner;
 
 /**
  * Class HttpApp - Plugin for \Magento\Framework\App\Http
@@ -16,37 +23,42 @@ namespace Yireo\Whoops\Plugin;
 class HttpApp
 {
     /**
-     * @var \Whoops\Run
+     * @var WhoopsRunner
      */
     private $whoopsRunner;
 
     /**
-     * @var \Whoops\Handler\PrettyPageHandler
+     * @var PrettyPageHandler
      */
     private $pageHandler;
 
+    /**
+     * HttpApp constructor.
+     * @param WhoopsRunner $whoopsRunner
+     * @param PrettyPageHandler $pageHandler
+     */
     public function __construct(
-        \Whoops\Run $whoopsRunner,
-        \Whoops\Handler\PrettyPageHandler $pageHandler
+        WhoopsRunner $whoopsRunner,
+        PrettyPageHandler $pageHandler
     )
     {
         $this->whoopsRunner = $whoopsRunner;
         $this->pageHandler = $pageHandler;
     }
 
+    /**
+     * @param Http $subject
+     * @param Bootstrap $bootstrap
+     * @param Exception $exception
+     * @return array
+     */
     public function beforeCatchException(
-        \Magento\Framework\App\Http $subject,
-        \Magento\Framework\App\Bootstrap $bootstrap,
-        \Exception $exception
-    )
-    {
+        Http $subject,
+        Bootstrap $bootstrap,
+        Exception $exception
+    ) {
         if ($bootstrap->isDeveloperMode()) {
-
-            // @todo: Create a configuration option for this
-            //$handler = new \Whoops\Handler\PlainTextHandler;
-            //$handler->setTraceFunctionArgsOutputLimit(64);
             $this->whoopsRunner->pushHandler($this->pageHandler);
-
             $this->whoopsRunner->handleException($exception);
         }
 

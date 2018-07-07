@@ -7,6 +7,8 @@
  * @copyright   Copyright 2016 Yireo (https://www.yireo.com/)
  * @license     Open Source License (OSL v3)
  */
+declare(strict_types=1);
+
 namespace Yireo\Whoops\Test\Unit;
 
 use Exception;
@@ -15,11 +17,12 @@ use Magento\Framework\App\Http as MagentoHttp;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
-use RuntimeException;
-use Whoops\Handler\PrettyPageHandler;
-use Whoops\Run as WhoopsRun;
 use Yireo\Whoops\Plugin\HttpApp;
 
+/**
+ * Class HttpAppTest
+ * @package Yireo\Whoops\Test\Unit
+ */
 class HttpAppTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -42,6 +45,9 @@ class HttpAppTest extends PHPUnit_Framework_TestCase
      */
     private $bootstrapMock;
 
+    /**
+     * Test setup
+     */
     public function setUp()
     {
         parent::setUp();
@@ -62,6 +68,5 @@ class HttpAppTest extends PHPUnit_Framework_TestCase
         $actual = $this->sut->beforeCatchException($this->subjectMock, $this->bootstrapMock, $exception);
 
         self::assertTrue(is_array($actual));
-
     }
 }
