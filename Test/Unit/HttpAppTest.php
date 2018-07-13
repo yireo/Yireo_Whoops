@@ -17,11 +17,6 @@ use Magento\Framework\App\Bootstrap;
 use Magento\Framework\App\Http as MagentoHttp;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
-use RuntimeException;
-use Whoops\Handler\PrettyPageHandler;
-use Whoops\Run as WhoopsRun;
 use Yireo\Whoops\Plugin\HttpApp;
 
 /**
@@ -51,6 +46,9 @@ class HttpAppTest extends TestCase
      */
     private $bootstrapMock;
 
+    /**
+     * Test setup
+     */
     public function setUp()
     {
         parent::setUp();
@@ -71,6 +69,5 @@ class HttpAppTest extends TestCase
         $actual = $this->sut->beforeCatchException($this->subjectMock, $this->bootstrapMock, $exception);
 
         self::assertTrue(is_array($actual));
-
     }
 }
