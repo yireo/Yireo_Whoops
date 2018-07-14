@@ -7,6 +7,7 @@
  * @copyright   Copyright 2016 Yireo (https://www.yireo.com/)
  * @license     Open Source License (OSL v3)
  */
+
 declare(strict_types=1);
 
 namespace Yireo\Whoops\Test\Unit;
@@ -14,7 +15,6 @@ namespace Yireo\Whoops\Test\Unit;
 use Exception;
 use Magento\Framework\App\Bootstrap;
 use Magento\Framework\App\Http as HttpApp;
-use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Whoops\Handler\PrettyPageHandler as WhoopsPrettyPageHandler;
 use Whoops\Run as WhoopsRunner;
