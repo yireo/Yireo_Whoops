@@ -13,60 +13,123 @@ namespace Yireo\Whoops\Test\Unit;
 
 use Exception;
 use Magento\Framework\App\Bootstrap;
-use Magento\Framework\App\Http as MagentoHttp;
+use Magento\Framework\App\Http as HttpApp;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
-use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
-use Yireo\Whoops\Plugin\HttpApp;
+use PHPUnit\Framework\TestCase;
+use Whoops\Handler\PrettyPageHandler as WhoopsPrettyPageHandler;
+use Whoops\Run as WhoopsRunner;
+use Yireo\Whoops\Plugin\HttpApp as HttpAppPlugin;
 
 /**
  * Class HttpAppTest
+ *
  * @package Yireo\Whoops\Test\Unit
  */
-class HttpAppTest extends PHPUnit_Framework_TestCase
+class HttpAppTest extends TestCase
 {
     /**
-     * @var ObjectManager
+     * @test Make sure the plugin method is sane
      */
-    private $objectManager;
-
-    /**
-     * @var HttpApp
-     */
-    private $sut;
-
-    /**
-     * @var PHPUnit_Framework_MockObject_MockObject | MagentoHttp
-     */
-    private $subjectMock;
-
-    /**
-     * @var PHPUnit_Framework_MockObject_MockObject | Bootstrap
-     */
-    private $bootstrapMock;
-
-    /**
-     * Test setup
-     */
-    public function setUp()
+    public function testPluginReturnValueMatches()
     {
-        parent::setUp();
+        $subject = $this->getHttpAppMock();
+        $bootstrap = $this->getBootstrapMock(false);
+        $exception = new Exception;
 
-        $this->objectManager = new ObjectManager($this);
-        $this->subjectMock = $this->getMockBuilder(MagentoHttp::class)->disableOriginalConstructor()->getMock();
-        $this->bootstrapMock = $this->getMockBuilder(Bootstrap::class)->disableOriginalConstructor()->getMock();
-        $this->bootstrapMock->expects($this->once())->method('isDeveloperMode')->willReturn(true);
-        $this->sut = $this->objectManager->getObject(HttpApp::class);
+        $actual = $this->getHttpAppPlugin()->beforeCatchException($subject, $bootstrap, $exception);
+        $this->assertSame($actual, [$bootstrap, $exception]);
+    }
+
+    /**
+     * @test Make sure Whoops is not loaded before or after, when not in the Developer Mode
+     */
+    public function testWhoopsIsLoadedInDefaultMode()
+    {
+        $subject = $this->getHttpAppMock();
+        $bootstrap = $this->getBootstrapMock(false);
+
+        $this->assertNotContains(WhoopsPrettyPageHandler::class, $this->getHandlerClassFromWhoops());
+        $this->getHttpAppPlugin()->beforeCatchException($subject, $bootstrap, new Exception);
+        $this->assertNotContains(WhoopsPrettyPageHandler::class, $this->getHandlerClassFromWhoops());
     }
 
     /**
      * @test
      */
-    public function itShouldRunTheWhoopsHandler()
+    public function testWhoopsIsLoadedInDeveloperMode()
     {
-        $exception = new Exception();
-        $actual = $this->sut->beforeCatchException($this->subjectMock, $this->bootstrapMock, $exception);
+        $subject = $this->getHttpAppMock();
+        $bootstrap = $this->getBootstrapMock(true);
 
-        self::assertTrue(is_array($actual));
+        $this->assertNotContains(WhoopsPrettyPageHandler::class, $this->getHandlerClassFromWhoops());
+        $this->getHttpAppPlugin()->beforeCatchException($subject, $bootstrap, new Exception);
+        $this->assertContains(WhoopsPrettyPageHandler::class, $this->getHandlerClassFromWhoops());
+    }
+
+    /**
+     * @return array
+     */
+    private function getHandlerClassFromWhoops(): array
+    {
+        $whoopsRunner = $this->getWhoopsRunner();
+        $whoopsHandlers = $whoopsRunner->getHandlers();
+        $currentHandlers = [];
+        foreach ($whoopsHandlers as $whoopsHandler) {
+            $currentHandlers[] = get_class($whoopsHandler);
+        }
+
+        return $currentHandlers;
+    }
+
+    /**
+     * @return HttpApp
+     */
+    private function getHttpAppMock(): HttpApp
+    {
+        return $this->getMockBuilder(HttpApp::class)->disableOriginalConstructor()->getMock();
+    }
+
+    /**
+     * @return HttpAppPlugin
+     */
+    private function getHttpAppPlugin(): HttpAppPlugin
+    {
+        $whoopsRunner = $this->getWhoopsRunner();
+        $prettyPageHandler = $this->getWhoopsPageHandler();
+
+        return new HttpAppPlugin($whoopsRunner, $prettyPageHandler);
+    }
+
+    /**
+     * @return WhoopsRunner
+     */
+    private function getWhoopsRunner(): WhoopsRunner
+    {
+        static $instance = false;
+        if (!$instance) {
+            $instance = new WhoopsRunner();
+        }
+
+        return $instance;
+    }
+
+    /**
+     * @return WhoopsPrettyPageHandler
+     */
+    private function getWhoopsPageHandler(): WhoopsPrettyPageHandler
+    {
+        return new WhoopsPrettyPageHandler;
+    }
+
+    /**
+     * @param bool $developerMode
+     *
+     * @return Bootstrap
+     */
+    private function getBootstrapMock(bool $developerMode = true): Bootstrap
+    {
+        $bootstrapMock = $this->getMockBuilder(Bootstrap::class)->disableOriginalConstructor()->getMock();
+        $bootstrapMock->expects($this->once())->method('isDeveloperMode')->willReturn($developerMode);
+        return $bootstrapMock;
     }
 }
