@@ -15,15 +15,16 @@ use Exception;
 use Magento\Framework\App\Bootstrap;
 use Magento\Framework\App\Http as MagentoHttp;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
+
 use Yireo\Whoops\Plugin\HttpApp;
 
 /**
  * Class HttpAppTest
  * @package Yireo\Whoops\Test\Unit
  */
-class HttpAppTest extends PHPUnit_Framework_TestCase
+class HttpAppTest extends TestCase
 {
     /**
      * @var ObjectManager
