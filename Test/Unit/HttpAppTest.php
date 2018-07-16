@@ -14,20 +14,17 @@ namespace Yireo\Whoops\Test\Unit;
 
 use Exception;
 use Magento\Framework\App\Bootstrap;
-<<<<<<< HEAD
 use Magento\Framework\App\Http as MagentoHttp;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 
 use Yireo\Whoops\Plugin\HttpApp;
-=======
 use Magento\Framework\App\Http as HttpApp;
 use PHPUnit\Framework\TestCase;
 use Whoops\Handler\PrettyPageHandler as WhoopsPrettyPageHandler;
 use Whoops\Run as WhoopsRunner;
 use Yireo\Whoops\Plugin\HttpApp as HttpAppPlugin;
->>>>>>> 6aee09b39f18a2d62abede83ff54f51cc972c524
 
 /**
  * Class HttpAppTest
