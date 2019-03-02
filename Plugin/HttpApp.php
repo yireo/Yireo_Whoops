@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Yireo\Whoops\Plugin;
 
-use Exception;
+use Throwable;
 use Magento\Framework\App\Bootstrap;
 use Magento\Framework\App\Http;
 use Whoops\Handler\PrettyPageHandler;
@@ -49,13 +49,13 @@ class HttpApp
     /**
      * @param Http $subject
      * @param Bootstrap $bootstrap
-     * @param Exception $exception
+     * @param Throwable $exception
      * @return array
      */
     public function beforeCatchException(
         Http $subject,
         Bootstrap $bootstrap,
-        Exception $exception
+        Throwable $exception
     ) {
         if ($bootstrap->isDeveloperMode()) {
             $this->whoopsRunner->pushHandler($this->pageHandler);
