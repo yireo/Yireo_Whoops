@@ -7,6 +7,7 @@
  * @copyright   Copyright 2016 Yireo (https://www.yireo.com/)
  * @license     Open Source License (OSL v3)
  */
+
 declare(strict_types=1);
 
 namespace Yireo\Whoops\Plugin;
@@ -40,8 +41,7 @@ class HttpApp
     public function __construct(
         WhoopsRunner $whoopsRunner,
         PrettyPageHandler $pageHandler
-    )
-    {
+    ) {
         $this->whoopsRunner = $whoopsRunner;
         $this->pageHandler = $pageHandler;
     }
