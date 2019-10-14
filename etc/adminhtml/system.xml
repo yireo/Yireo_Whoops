@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="yireo" sortOrder="999" translate="label">
+            <label>Yireo</label>
+        </tab>
+        <section id="yireo_whoops" translate="label" sortOrder="342" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Yireo Whoops</label>
+            <tab>yireo</tab>
+            <resource>Yireo_Whoops::config</resource>
+            <group id="settings" translate="label" type="text" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Settings</label>
+                <field id="editor" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Editor</label>
+                    <source_model>Yireo\Whoops\Model\Config\Source\Editor</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
