@@ -19,6 +19,8 @@ use Magento\Framework\App\Http as HttpApp;
 use Whoops\Handler\PrettyPageHandler as WhoopsPrettyPageHandler;
 use Whoops\Run as WhoopsRunner;
 use Yireo\Whoops\Plugin\HttpApp as HttpAppPlugin;
+use Yireo\Whoops\Config\Config;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 /**
  * Class HttpAppTest
@@ -96,8 +98,9 @@ class HttpAppTest extends TestCase
     {
         $whoopsRunner = $this->getWhoopsRunner();
         $prettyPageHandler = $this->getWhoopsPageHandler();
+        $config = $this->getConfig();
 
-        return new HttpAppPlugin($whoopsRunner, $prettyPageHandler);
+        return new HttpAppPlugin($whoopsRunner, $prettyPageHandler, $config);
     }
 
     /**
@@ -119,6 +122,15 @@ class HttpAppTest extends TestCase
     private function getWhoopsPageHandler(): WhoopsPrettyPageHandler
     {
         return new WhoopsPrettyPageHandler;
+    }
+
+    /**
+     * @return Config
+     */
+    private function getConfig(): Config
+    {
+        $scopeConfig = $this->getMockBuilder(ScopeConfigInterface::class)->disableOriginalConstructor()->getMock();
+        return new Config($scopeConfig);
     }
 
     /**
