@@ -66,7 +66,7 @@ class HttpApp
         Bootstrap $bootstrap,
         Throwable $exception
     ) {
-        if ($bootstrap->isDeveloperMode()) {
+        if ($bootstrap->isDeveloperMode() || $this->config->getOverride()) {
             $this->setEditor();
             $this->whoopsRunner->pushHandler($this->pageHandler);
             $this->whoopsRunner->handleException($exception);

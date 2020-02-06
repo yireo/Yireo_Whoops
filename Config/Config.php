@@ -35,4 +35,12 @@ class Config
     {
         return (string)$this->scopeConfig->getValue('yireo_whoops/settings/editor');
     }
+
+    /**
+     * @return bool
+     */
+    public function getOverride(): bool
+    {
+        return (bool)$this->scopeConfig->getValue('yireo_whoops/settings/override');
+    }
 }
