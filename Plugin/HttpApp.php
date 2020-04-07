@@ -12,9 +12,12 @@ declare(strict_types=1);
 
 namespace Yireo\Whoops\Plugin;
 
+use Closure;
+use Exception;
 use Throwable;
 use Magento\Framework\App\Bootstrap;
 use Magento\Framework\App\Http;
+use Magento\Framework\App\ResponseInterface;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run as WhoopsRunner;
 use Yireo\Whoops\Config\Config;
@@ -86,5 +89,29 @@ class HttpApp
         }
 
         return false;
+    }
+
+    /**
+     * @param Http $subject
+     * @param Closure $proceed
+     * @return ResponseInterface
+     * @throws Exception
+     */
+    public function aroundLaunch(Http $subject, Closure $proceed): ResponseInterface
+    {
+        try {
+            return $proceed();
+        } catch (Throwable $e) {
+            if ($e instanceof Exception) {
+                throw $e;
+            }
+
+            /**
+             * Convert the Throwable to an exception for it to be caught by the main catch(\Exception) block.
+             *
+             * @see \Magento\Framework\App\Bootstrap::run
+             */
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
+        }
     }
 }
