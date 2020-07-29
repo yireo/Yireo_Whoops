@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3] - 29 July 2020
+### Added
+- Magento 2.4 support
+
+## [0.1.2] - 2020-04-07
+### Added
+- Convert Throwables to Exceptions (@DuckThom)
 ## [0.1.2] - 2020-04-07
 ### Added
 - Convert Throwables to Exceptions (@DuckThom)

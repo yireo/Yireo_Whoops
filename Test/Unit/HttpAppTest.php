@@ -50,9 +50,9 @@ class HttpAppTest extends TestCase
         $subject = $this->getHttpAppMock();
         $bootstrap = $this->getBootstrapMock(false);
 
-        $this->assertNotContains(WhoopsPrettyPageHandler::class, $this->getHandlerClassFromWhoops());
+        $this->assertFalse(in_array(WhoopsPrettyPageHandler::class, $this->getHandlerClassFromWhoops()));
         $this->getHttpAppPlugin()->beforeCatchException($subject, $bootstrap, new Exception);
-        $this->assertNotContains(WhoopsPrettyPageHandler::class, $this->getHandlerClassFromWhoops());
+        $this->assertFalse(in_array(WhoopsPrettyPageHandler::class, $this->getHandlerClassFromWhoops()));
     }
 
     /**
@@ -63,9 +63,9 @@ class HttpAppTest extends TestCase
         $subject = $this->getHttpAppMock();
         $bootstrap = $this->getBootstrapMock(true);
 
-        $this->assertNotContains(WhoopsPrettyPageHandler::class, $this->getHandlerClassFromWhoops());
+        $this->assertFalse(in_array(WhoopsPrettyPageHandler::class, $this->getHandlerClassFromWhoops()));
         $this->getHttpAppPlugin()->beforeCatchException($subject, $bootstrap, new Exception);
-        $this->assertContains(WhoopsPrettyPageHandler::class, $this->getHandlerClassFromWhoops());
+        $this->assertTrue(in_array(WhoopsPrettyPageHandler::class, $this->getHandlerClassFromWhoops()));
     }
 
     /**
