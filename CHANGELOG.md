@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.4] - 14 April 2022
+### Removed
+- Removed support for Magento 2.0, 2.1 and 2.2
+- Removed PHP requirement (so that Magento its req is sufficient)
+
 ## [0.1.3] - 29 July 2020
 ### Added
 - Magento 2.4 support
