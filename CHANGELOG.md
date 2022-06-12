@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 12 June 2022
+### Added
+- Add links to Google and StackExchange (@moElwan)
+
 ## [0.1.4] - 14 April 2022
 ### Removed
 - Removed support for Magento 2.0, 2.1 and 2.2
