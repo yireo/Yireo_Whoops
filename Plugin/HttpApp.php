@@ -71,6 +71,7 @@ class HttpApp
     ) {
         if ($bootstrap->isDeveloperMode() || $this->config->getOverride()) {
             $this->setEditor();
+            $this->addCustomViewsFolderToResourcePaths();
             $this->whoopsRunner->pushHandler($this->pageHandler);
             $this->whoopsRunner->handleException($exception);
         }
@@ -112,6 +113,20 @@ class HttpApp
              * @see \Magento\Framework\App\Bootstrap::run
              */
             throw new Exception($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * Add custom resource path to allow us override Whoops resources
+     *
+     * @return void
+     */
+    public function addCustomViewsFolderToResourcePaths(): void
+    {
+        $viewsDirPath = __DIR__ . '/../view/whoops';
+
+        if (is_dir($viewsDirPath)) {
+            $this->pageHandler->addResourcePath($viewsDirPath);
         }
     }
 }
