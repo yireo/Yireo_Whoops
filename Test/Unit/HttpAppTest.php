@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Whoops plugin for Magento
  *
@@ -7,8 +7,6 @@
  * @copyright   Copyright 2016 Yireo (https://www.yireo.com/)
  * @license     Open Source License (OSL v3)
  */
-
-declare(strict_types=1);
 
 namespace Yireo\Whoops\Test\Unit;
 
