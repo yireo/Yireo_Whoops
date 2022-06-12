@@ -12,7 +12,7 @@ Next, install the new module into Magento itself:
     ./bin/magento setup:upgrade
 
 Check whether the module is succesfully installed in **Admin > Stores >
-Configuration > Advanced > Advanced**.
+Configuration > Yireo > Yireo Whoops**.
 
 Done.
 
