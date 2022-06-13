@@ -1,18 +1,23 @@
 # Installation
+
 ## Instructions for using composer
 Use composer to install this extension. First make sure that Magento is installed via composer, and that there is a valid `composer.json` file present.
 
 Next, install our module using the following command:
 
-    composer require --dev yireo/magento2-whoops
+```bash
+composer require --dev yireo/magento2-whoops
+```
 
 Next, install the new module into Magento itself:
 
-    ./bin/magento module:enable Yireo_Whoops
-    ./bin/magento setup:upgrade
+```bash
+./bin/magento module:enable Yireo_Whoops
+./bin/magento setup:upgrade
+```
 
 Check whether the module is succesfully installed in **Admin > Stores >
-Configuration > Advanced > Advanced**.
+Configuration > Yireo > Yireo Whoops**.
 
 Done.
 
