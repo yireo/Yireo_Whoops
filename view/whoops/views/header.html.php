@@ -1,3 +1,15 @@
+<?php
+declare(strict_types=1);
+
+use Whoops\Util\TemplateHelper;
+
+/** @var TemplateHelper $tpl */
+/** @var string[] $name */
+/** @var int $code */
+/** @var string[] $previousMessages */
+/** @var int[] $previousCodes */
+/** @var string $plain_exception */
+?>
 <div class="exception">
   <div class="exc-title">
     <?php foreach ($name as $i => $nameSection): ?>
