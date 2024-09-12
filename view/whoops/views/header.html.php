@@ -14,19 +14,19 @@ use Whoops\Util\TemplateHelper;
   <div class="exc-title">
     <?php foreach ($name as $i => $nameSection): ?>
       <?php if ($i == count($name) - 1): ?>
-        <span class="exc-title-primary"><?php echo $tpl->escape($nameSection) ?></span>
+        <span class="exc-title-primary"><?= $tpl->escape($nameSection) ?></span>
       <?php else: ?>
-        <?php echo $tpl->escape($nameSection) . ' \\' ?>
+        <?= $tpl->escape($nameSection) . ' \\' ?>
       <?php endif ?>
     <?php endforeach ?>
     <?php if ($code): ?>
-      <span title="Exception Code">(<?php echo $tpl->escape($code) ?>)</span>
+      <span title="Exception Code">(<?= $tpl->escape($code) ?>)</span>
     <?php endif ?>
   </div>
 
   <div class="exc-message">
     <?php if (!empty($message)): ?>
-      <span><?php echo $tpl->escape($message) ?></span>
+      <span><?= $tpl->escape($message) ?></span>
 
 
       <?php if (count($previousMessages)): ?>
@@ -37,8 +37,8 @@ use Whoops\Util\TemplateHelper;
         <ul>
           <?php foreach ($previousMessages as $i => $previousMessage): ?>
             <li>
-              <?php echo $tpl->escape($previousMessage) ?>
-              <span class="prev-exc-code">(<?php echo $previousCodes[$i] ?>)</span>
+              <?= $tpl->escape($previousMessage) ?>
+              <span class="prev-exc-code">(<?= $previousCodes[$i] ?>)</span>
             </li>
           <?php endforeach; ?>
         </ul>
@@ -53,7 +53,7 @@ use Whoops\Util\TemplateHelper;
     <ul class="search-for-help">
       <?php if (!empty($docref_url)): ?>
       <li>
-        <a rel="noopener noreferrer" target="_blank" href="<?php echo $docref_url; ?>" title="Search for help in the PHP manual.">
+        <a rel="noopener noreferrer" target="_blank" href="<?= $docref_url; ?>" title="Search for help in the PHP manual.">
           <!-- PHP icon by Icons Solid -->
           <!-- https://www.iconfinder.com/icons/322421/book_icon -->
           <!-- Free for commercial use -->
@@ -62,7 +62,7 @@ use Whoops\Util\TemplateHelper;
       </li>
       <?php endif ?>
       <li>
-        <a rel="noopener noreferrer" target="_blank" href="https://google.com/search?q=<?php echo urlencode(implode('\\', $name).' '.$message) ?>" title="Search for help on Google.">
+        <a rel="noopener noreferrer" target="_blank" href="https://google.com/search?q=<?= urlencode(implode('\\', $name).' '.$message) ?>" title="Search for help on Google.">
           <!-- Google icon by Alfredo H, from https://www.iconfinder.com/alfredoh -->
           <!-- Creative Commons (Attribution 3.0 Unported) -->
           <!-- http://creativecommons.org/licenses/by/3.0/ -->
@@ -72,7 +72,7 @@ use Whoops\Util\TemplateHelper;
         </a>
       </li>
       <li>
-        <a rel="noopener noreferrer" target="_blank" href="https://duckduckgo.com/?q=<?php echo urlencode(implode('\\', $name).' '.$message) ?>" title="Search for help on DuckDuckGo.">
+        <a rel="noopener noreferrer" target="_blank" href="https://duckduckgo.com/?q=<?= urlencode(implode('\\', $name).' '.$message) ?>" title="Search for help on DuckDuckGo.">
           <!-- DuckDuckGo icon by IconBaandar Team, from https://www.iconfinder.com/iconbaandar -->
           <!-- Creative Commons (Attribution 3.0 Unported) -->
           <!-- http://creativecommons.org/licenses/by/3.0/ -->
@@ -86,7 +86,7 @@ use Whoops\Util\TemplateHelper;
         </a>
       </li>
       <li>
-        <a rel="noopener noreferrer" target="_blank" href="https://stackoverflow.com/search?q=<?php echo urlencode(implode('\\', $name).' '.$message) ?>" title="Search for help on Stack Overflow.">
+        <a rel="noopener noreferrer" target="_blank" href="https://stackoverflow.com/search?q=<?= urlencode(implode('\\', $name).' '.$message) ?>" title="Search for help on Stack Overflow.">
           <!-- Stack Overflow icon by Picons.me, from https://www.iconfinder.com/Picons -->
           <!-- Free for commercial use -->
           <svg class="stackoverflow" height="16" viewBox="-1163 1657.697 56.693 56.693" width="16" xmlns="http://www.w3.org/2000/svg">
@@ -96,7 +96,7 @@ use Whoops\Util\TemplateHelper;
         </a>
       </li>
       <li>
-        <a rel="noopener noreferrer" target="_blank" href="https://www.google.com/search?q=site%3Amagento.stackexchange.com+<?php echo urlencode(implode('\\', $name).' '.$message) ?>" title="Search for help on Magento Stackexchange.">
+        <a rel="noopener noreferrer" target="_blank" href="https://www.google.com/search?q=site%3Amagento.stackexchange.com+<?= urlencode(implode('\\', $name).' '.$message) ?>" title="Search for help on Magento Stackexchange.">
           <!-- Magento icon by iconfinder, from https://www.iconfinder.com/iconfinder -->
           <!-- Free for commercial use -->
           <svg class="magento" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
@@ -106,8 +106,8 @@ use Whoops\Util\TemplateHelper;
       </li>
     </ul>
 
-    <span id="plain-exception"><?php echo $tpl->escape($plain_exception) ?></span>
-    <button id="copy-button" class="rightButton clipboard" data-clipboard-text="<?php echo $tpl->escape($plain_exception) ?>" title="Copy exception details to clipboard">
+    <span id="plain-exception"><?= $tpl->escape($plain_exception) ?></span>
+    <button id="copy-button" class="rightButton clipboard" data-clipboard-text="<?= $tpl->escape($plain_exception) ?>" title="Copy exception details to clipboard">
       COPY
     </button>
     <button id="hide-error" class="rightButton" title="Hide error message" onclick="document.getElementsByClassName('Whoops')[0].style.display = 'none';">

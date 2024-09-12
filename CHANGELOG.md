@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 12 September 2024
+### Fixed
+- Added type hints to template
+
 ## [0.2.0] - 12 June 2022
 ### Added
 - Add links to Google and StackExchange (@moElwan)
