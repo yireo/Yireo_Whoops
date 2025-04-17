@@ -16,7 +16,7 @@ use Throwable;
 use Magento\Framework\App\Bootstrap;
 use Magento\Framework\App\Http;
 use Magento\Framework\App\ResponseInterface;
-use Whoops\Handler\PrettyPageHandler;
+use Whoops\Handler\HandlerInterface;
 use Whoops\Run as WhoopsRunner;
 use Yireo\Whoops\Config\Config;
 
@@ -31,7 +31,7 @@ class HttpApp
     private $whoopsRunner;
 
     /**
-     * @var PrettyPageHandler
+     * @var HandlerInterface
      */
     private $pageHandler;
 
@@ -43,12 +43,12 @@ class HttpApp
     /**
      * HttpApp constructor.
      * @param WhoopsRunner $whoopsRunner
-     * @param PrettyPageHandler $pageHandler
+     * @param HandlerInterface $pageHandler
      * @param Config $config
      */
     public function __construct(
         WhoopsRunner $whoopsRunner,
-        PrettyPageHandler $pageHandler,
+        HandlerInterface $pageHandler,
         Config $config
     ) {
         $this->whoopsRunner = $whoopsRunner;

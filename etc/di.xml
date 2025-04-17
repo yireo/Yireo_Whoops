@@ -1,7 +1,12 @@
 <?xml version="1.0" ?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Whoops\Handler\HandlerInterface" type="Whoops\Handler\PrettyPageHandler" />
     <type name="Magento\Framework\App\Http">
         <plugin name="Yireo_Whoops::HttpApp" type="Yireo\Whoops\Plugin\HttpApp" />
+    </type>
+
+    <type name="Yireo\Whoops\Plugin\HttpApp">
+        <arguments>
+            <argument name="prettyPageHandler" xsi:type="object">Whoops\Handler\PrettyPageHandler</argument>
+        </arguments>
     </type>
 </config>
