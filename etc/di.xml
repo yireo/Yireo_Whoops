@@ -6,7 +6,7 @@
 
     <type name="Yireo\Whoops\Plugin\HttpApp">
         <arguments>
-            <argument name="prettyPageHandler" xsi:type="object">Whoops\Handler\PrettyPageHandler</argument>
+            <argument name="pageHandler" xsi:type="object">Whoops\Handler\PrettyPageHandler</argument>
         </arguments>
     </type>
 </config>
