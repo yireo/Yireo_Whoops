@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.3] - 17 April 2025
+### Fixed
+- Move interface/class mapping from preference to type, due to 2.4.8
+
 ## [0.2.2] - 12 September 2024
 ### Fixed
 - Actual commits
