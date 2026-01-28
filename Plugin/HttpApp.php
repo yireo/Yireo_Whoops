@@ -110,7 +110,7 @@ class HttpApp
              *
              * @see \Magento\Framework\App\Bootstrap::run
              */
-            throw new Exception($e->getMessage(), $e->getCode(), $e);
+            throw new Exception((string)$e->getMessage(), $e->getCode(), $e);
         }
     }
 
