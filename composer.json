@@ -22,7 +22,7 @@
   "require": {
     "magento/framework": "^102.0|^103.0",
     "filp/whoops": "^2.1",
-    "symfony/var-dumper": "*"
+    "symfony/var-dumper": "^5.0 | ^6.0 | ^7.0 | ^8.0"
   },
   "require-dev": {
     "phpunit/phpunit": "*",
