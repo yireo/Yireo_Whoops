@@ -1,45 +1,45 @@
 {
-  "name": "yireo/magento2-whoops",
-  "version": "0.2.4",
-  "license": "OSL-3.0",
-  "type": "magento2-module",
-  "homepage": "https://www.yireo.com/software/magento-extensions/extension/153-whoops/category/2",
-  "description": "Magento 2 module adding Whoops error handling",
-  "keywords": [
-    "composer-installer",
-    "magento",
-    "Whoops",
-    "Magento 2",
-    "Exception",
-    "Yireo"
-  ],
-  "authors": [
-    {
-      "name": "Jisse Reitsma (Yireo)",
-      "email": "jisse@yireo.com"
-    }
-  ],
-  "require": {
-    "magento/framework": "^102.0|^103.0",
-    "filp/whoops": "^2.1",
-    "symfony/var-dumper": "^5.0 | ^6.0 | ^7.0 | ^8.0"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "*",
-    "composer/composer": "*@dev"
-  },
-  "repositories": {
-    "magento": {
-      "type": "composer",
-      "url": "https://repo.magento.com/"
-    }
-  },
-  "autoload": {
-    "psr-4": {
-      "Yireo\\Whoops\\": ""
+    "name": "yireo/magento2-whoops",
+    "version": "0.2.4",
+    "license": "OSL-3.0",
+    "type": "magento2-module",
+    "homepage": "https://www.yireo.com/software/magento-extensions/extension/153-whoops/category/2",
+    "description": "Magento 2 module adding Whoops error handling",
+    "keywords": [
+        "composer-installer",
+        "magento",
+        "Whoops",
+        "Magento 2",
+        "Exception",
+        "Yireo"
+    ],
+    "authors": [
+        {
+            "name": "Jisse Reitsma (Yireo)",
+            "email": "jisse@yireo.com"
+        }
+    ],
+    "require": {
+        "filp/whoops": "^2.1",
+        "magento/framework": "^102.0|^103.0",
+        "symfony/var-dumper": "^5.0 | ^6.0 | ^7.0 | ^8.0"
     },
-    "files": [
-      "registration.php"
-    ]
-  }
+    "require-dev": {
+        "composer/composer": "*@dev",
+        "phpunit/phpunit": "*"
+    },
+    "repositories": {
+        "magento": {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Yireo\\Whoops\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
+    }
 }
