@@ -3,5 +3,36 @@
     "composer_name": "yireo/magento2-whoops",
     "sequence": [
         "Magento_Store"
-    ]
+    ],
+    "php_versions": [
+        "8.1",
+        "8.2",
+        "8.3",
+        "8.4"
+    ],
+    "skip_magento_versions": [],
+    "skip_css_utils": false,
+    "modules": [
+        "Magento_Store"
+    ],
+    "components": [],
+    "config": [
+        {
+            "path": "yireo_whoops/settings/override",
+            "label": "Settings > Override Production Mode error reporting",
+            "description": ""
+        },
+        {
+            "path": "yireo_whoops/settings/editor",
+            "label": "Settings > Editor",
+            "description": ""
+        }
+    ],
+    "tests": {
+        "unit": 3,
+        "integration": 0,
+        "functional": 0
+    },
+    "phpcs_severity": 10,
+    "phpstan_level": 1
 }
