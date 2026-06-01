@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.4] - 01 June 2026
+### Fixed
+- Remove `setup_version` from XML
+- Properly set version of symfony/var-dumper
+- Make sure exception message is a string, not a Phrase
+
 ## [0.2.3] - 17 April 2025
 ### Fixed
 - Move interface/class mapping from preference to type, due to 2.4.8
