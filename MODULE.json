@@ -1,0 +1,7 @@
+{
+    "module_name": "Yireo_Whoops",
+    "composer_name": "yireo/magento2-whoops",
+    "sequence": [
+        "Magento_Store"
+    ]
+}
