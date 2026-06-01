@@ -3,7 +3,7 @@
     "composer_name": "yireo/magento2-whoops",
     "sequence": [
         "Magento_Backend",
-        "Magento_Store"
+        "Magento_Config"
     ],
     "php_versions": [
         "8.1",
@@ -15,6 +15,7 @@
     "skip_css_utils": false,
     "modules": [
         "Magento_Backend",
+        "Magento_Config",
         "Magento_Directory",
         "Magento_Store",
         "Magento_Theme"
