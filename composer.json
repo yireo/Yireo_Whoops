@@ -25,10 +25,6 @@
         "magento/module-backend": "^102.0",
         "magento/module-config": "^101.2"
     },
-    "require-dev": {
-        "composer/composer": "*@dev",
-        "phpunit/phpunit": "*"
-    },
     "repositories": {
         "magento": {
             "type": "composer",
