@@ -2,6 +2,7 @@
     "module_name": "Yireo_Whoops",
     "composer_name": "yireo/magento2-whoops",
     "sequence": [
+        "Magento_Backend",
         "Magento_Store"
     ],
     "php_versions": [
@@ -13,7 +14,10 @@
     "skip_magento_versions": [],
     "skip_css_utils": false,
     "modules": [
-        "Magento_Store"
+        "Magento_Backend",
+        "Magento_Directory",
+        "Magento_Store",
+        "Magento_Theme"
     ],
     "components": [],
     "config": [
