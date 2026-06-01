@@ -22,7 +22,8 @@
     "require": {
         "filp/whoops": "^2.1",
         "magento/framework": "^102.0|^103.0",
-        "symfony/var-dumper": "^5.0 | ^6.0 | ^7.0 | ^8.0"
+        "magento/module-backend": "^102.0",
+        "magento/module-config": "^101.2"
     },
     "require-dev": {
         "composer/composer": "*@dev",
