@@ -23,7 +23,8 @@
         "filp/whoops": "^2.1",
         "magento/framework": "^102.0|^103.0",
         "magento/module-backend": "^102.0",
-        "magento/module-config": "^101.2"
+        "magento/module-config": "^101.2",
+        "php": ">=8.2 <8.6"
     },
     "repositories": {
         "magento": {
