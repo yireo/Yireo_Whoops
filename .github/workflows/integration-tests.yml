@@ -33,13 +33,18 @@ jobs:
         run: |
           test -d $GITHUB_WORKSPACE/Test/Integration || echo "SKIP_JOB=true" >> $GITHUB_ENV
 
+      - name: Cleanup PHP
+        if: env.SKIP_JOB != 'true'
+        run: |
+          test -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && rm -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini || true
+
       - name: Apply patch for reporting memory under Alpine
         if: env.SKIP_JOB != 'true'
-        run: cd /tmp/magento && curl -fsSL https://patch-diff.githubusercontent.com/raw/magento/magento2/pull/39216.diff | git apply
+        run: cd /tmp/magento && curl -fsSL https://patch-diff.githubusercontent.com/raw/magento/magento2/pull/39216.diff | git apply || true
 
       - name: Apply patch for changing MySQL client configuration
         if: env.SKIP_JOB != 'true'
-        run: cd /tmp/magento && curl -fsSL https://patch-diff.githubusercontent.com/raw/magento/magento2/pull/40410.diff | git apply
+        run: cd /tmp/magento && curl -fsSL https://patch-diff.githubusercontent.com/raw/magento/magento2/pull/40410.diff | git apply || true
 
       - name: Setting up module variables
         if: env.SKIP_JOB != 'true'
@@ -52,10 +57,24 @@ jobs:
         run: |
           test -n "${{ secrets.GITLAB_TOKEN }}" || exit 0
           cd /tmp/magento
-          test -f $GITHUB_WORKSPACE/.github/workflows/composer-additional.sh && source $GITHUB_WORKSPACE/.github/workflows/composer-additional.sh
-          test -f $GITHUB_WORKSPACE/.github/workflows/composer-${MAGENTO_VERSION}.sh && source $GITHUB_WORKSPACE/.github/workflows/composer-${MAGENTO_VERSION}.sh
-          composer config --auth gitlab-token.gitlab.yireo.com ${{ secrets.GITLAB_TOKEN }}
+          composer config --auth gitlab-token.gitlab.yireo.com "${{ secrets.GITLAB_TOKEN }}"
+          composer config repositories.loki-third-party composer https://gitlab.yireo.com/api/v4/group/loki-third-party/-/packages/composer/packages.json
           composer config repositories.loki-checkout composer https://gitlab.yireo.com/api/v4/group/loki-checkout/-/packages/composer/packages.json
+          composer config repositories.loki-checkout-dev composer https://gitlab.yireo.com/api/v4/group/loki-checkout-dev/-/packages/composer/packages.json
+
+      - name: Configure Magento Marketplace
+        if: env.SKIP_JOB != 'true'
+        run: |
+          test -n "${{ secrets.MAGENTO_MARKETPLACE_PUBLIC_KEY }}" || exit 0
+          composer config --global --auth http-basic.repo.magento.com "${{ secrets.MAGENTO_MARKETPLACE_PUBLIC_KEY }}" "${{ secrets.MAGENTO_MARKETPLACE_PRIVATE_KEY }}"
+
+      - name: Configure composer
+        if: env.SKIP_JOB != 'true'
+        run: |
+          cd /tmp/magento
+          composer config --global --auth github-oauth.github.com "${{ secrets.COMPOSER_GITHUB_TOKEN }}"
+          test -f $GITHUB_WORKSPACE/.github/workflows/composer-additional.sh && source $GITHUB_WORKSPACE/.github/workflows/composer-additional.sh || true
+          test -f $GITHUB_WORKSPACE/.github/workflows/composer-${MAGENTO_VERSION}.sh && source $GITHUB_WORKSPACE/.github/workflows/composer-${MAGENTO_VERSION}.sh || true
 
       - name: Add module source
         if: env.SKIP_JOB != 'true'
@@ -63,7 +82,7 @@ jobs:
           cp -R ${GITHUB_WORKSPACE} /tmp/magento/package-source
           cd /tmp/magento
           composer config repositories.local-source path package-source/
-          composer require --prefer-source -- ${COMPOSER_NAME}:@dev yireo/magento2-integration-test-helper
+          composer require -n --prefer-source -- ${COMPOSER_NAME}:@dev yireo/magento2-integration-test-helper
 
       - name: Run Magento 2 Integration Tests
         if: env.SKIP_JOB != 'true'
@@ -72,5 +91,5 @@ jobs:
           cp -R ${GITHUB_WORKSPACE}/.github/workflows/integration-tests/* .
           php ../../../vendor/bin/phpunit --atleast-version 9 && cp phpunit9.xml phpunit.xml
           php ../../../vendor/bin/phpunit --atleast-version 10 && cp phpunit10.xml phpunit.xml
-          php -d memory_limit=4G ../../../vendor/bin/phpunit -c phpunit.xml ../../../vendor/$COMPOSER_NAME/Test/Integration
+          php -d memory_limit=-1 ../../../vendor/bin/phpunit -c phpunit.xml ../../../vendor/$COMPOSER_NAME/Test/Integration
 
