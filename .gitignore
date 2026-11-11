@@ -61,3 +61,5 @@ node_modules/
 .gitlab-ci-local/
 .yireo-extension-builder.json
 MEMORY.md
+.playwright
+.opencode

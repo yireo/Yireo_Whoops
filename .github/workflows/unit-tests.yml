@@ -6,10 +6,14 @@ jobs:
     name: Magento 2 Unit Tests
     runs-on: ubuntu-latest
     container:
-        image: yireo/magento2installed:2.4.8-p3
+      image: yireo/magento2installed:2.4.8-p5
+      credentials:
+        username: ${{ secrets.DOCKERHUB_USERNAME || '' }}
+        password: ${{ secrets.DOCKERHUB_TOKEN || '' }}
+      options: --user root
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Detecting unit tests
         run: |
@@ -31,7 +35,9 @@ jobs:
         run: |
           test -n "${{ secrets.GITLAB_TOKEN }}" || exit 0
           cd /tmp/magento
+          composer config gitlab-domains gitlab.yireo.com
           composer config --auth gitlab-token.gitlab.yireo.com "${{ secrets.GITLAB_TOKEN }}"
+          composer config repositories.loki-extensions composer https://gitlab.yireo.com/api/v4/group/loki-extensions/-/packages/composer/packages.json
           composer config repositories.loki-third-party composer https://gitlab.yireo.com/api/v4/group/loki-third-party/-/packages/composer/packages.json
           composer config repositories.loki-checkout composer https://gitlab.yireo.com/api/v4/group/loki-checkout/-/packages/composer/packages.json
           composer config repositories.loki-checkout-dev composer https://gitlab.yireo.com/api/v4/group/loki-checkout-dev/-/packages/composer/packages.json
@@ -42,11 +48,20 @@ jobs:
           test -n "${{ secrets.MAGENTO_MARKETPLACE_PUBLIC_KEY }}" || exit 0
           composer config --global --auth http-basic.repo.magento.com "${{ secrets.MAGENTO_MARKETPLACE_PUBLIC_KEY }}" "${{ secrets.MAGENTO_MARKETPLACE_PRIVATE_KEY }}"
 
+      - name: Configure Loki Private Packages
+        if: env.SKIP_JOB != 'true'
+        run: |
+          test -n "${{ secrets.LOKI_REPO_PASSWORD }}" || exit 0
+          cd /tmp/magento
+          composer config --global --auth http-basic.private-packages.loki-extensions.com "${{ secrets.LOKI_REPO_USERNAME }}" "${{ secrets.LOKI_REPO_PASSWORD }}"
+          composer config repositories.mirror "{\"type\":\"composer\",\"url\":\"https://private-packages.loki-extensions.com/\",\"canonical\":false}"
+
       - name: Configure composer
         if: env.SKIP_JOB != 'true'
         run: |
           cd /tmp/magento
-          composer config --global --auth github-oauth.github.com "${{ secrets.COMPOSER_GITHUB_TOKEN }}"
+          composer self-update --2
+          composer config --global --auth github-oauth.github.com "${{ github.token }}"
           test -f $GITHUB_WORKSPACE/.github/workflows/composer-additional.sh && source $GITHUB_WORKSPACE/.github/workflows/composer-additional.sh || true
           test -f $GITHUB_WORKSPACE/.github/workflows/composer-${MAGENTO_VERSION}.sh && source $GITHUB_WORKSPACE/.github/workflows/composer-${MAGENTO_VERSION}.sh || true
 

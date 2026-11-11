@@ -6,10 +6,17 @@ jobs:
     name: Magento 2 Integration Tests
     runs-on: ubuntu-latest
     container:
-      image: yireo/magento2installed:2.4.8-p3
+      image: yireo/magento2installed:2.4.8-p5
+      credentials:
+        username: ${{ secrets.DOCKERHUB_USERNAME || '' }}
+        password: ${{ secrets.DOCKERHUB_TOKEN || '' }}
+      options: --user root
     services:
       mysql:
         image: yireo/mariadb:10
+        credentials:
+          username: ${{ secrets.DOCKERHUB_USERNAME || '' }}
+          password: ${{ secrets.DOCKERHUB_TOKEN || '' }}
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_USER: magento2
@@ -18,6 +25,9 @@ jobs:
         options: --tmpfs /tmp:rw --tmpfs /var/lib/mysql:rw --health-cmd="mysqladmin ping"
       opensearch:
         image: yireo/opensearch:latest
+        credentials:
+          username: ${{ secrets.DOCKERHUB_USERNAME || '' }}
+          password: ${{ secrets.DOCKERHUB_TOKEN || '' }}
         env:
           'discovery.type': single-node
           ES_JAVA_OPTS: "-Xms256m -Xmx256m"
@@ -27,7 +37,7 @@ jobs:
         options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Detecting integration tests
         run: |
@@ -40,11 +50,11 @@ jobs:
 
       - name: Apply patch for reporting memory under Alpine
         if: env.SKIP_JOB != 'true'
-        run: cd /tmp/magento && curl -fsSL https://patch-diff.githubusercontent.com/raw/magento/magento2/pull/39216.diff | git apply || true
+        run: cd /tmp/magento && cat /tmp/magento/patches/39216.diff | git apply || true
 
       - name: Apply patch for changing MySQL client configuration
         if: env.SKIP_JOB != 'true'
-        run: cd /tmp/magento && curl -fsSL https://patch-diff.githubusercontent.com/raw/magento/magento2/pull/40410.diff | git apply || true
+        run: cd /tmp/magento && cat /tmp/magento/patches/40410.diff | git apply || true
 
       - name: Setting up module variables
         if: env.SKIP_JOB != 'true'
@@ -68,11 +78,20 @@ jobs:
           test -n "${{ secrets.MAGENTO_MARKETPLACE_PUBLIC_KEY }}" || exit 0
           composer config --global --auth http-basic.repo.magento.com "${{ secrets.MAGENTO_MARKETPLACE_PUBLIC_KEY }}" "${{ secrets.MAGENTO_MARKETPLACE_PRIVATE_KEY }}"
 
+      - name: Configure Loki Private Packages
+        if: env.SKIP_JOB != 'true'
+        run: |
+          test -n "${{ secrets.LOKI_REPO_PASSWORD }}" || exit 0
+          cd /tmp/magento
+          composer config --global --auth http-basic.private-packages.loki-extensions.com "${{ secrets.LOKI_REPO_USERNAME }}" "${{ secrets.LOKI_REPO_PASSWORD }}"
+          composer config repositories.mirror "{\"type\":\"composer\",\"url\":\"https://private-packages.loki-extensions.com/\",\"canonical\":false}"
+
       - name: Configure composer
         if: env.SKIP_JOB != 'true'
         run: |
           cd /tmp/magento
-          composer config --global --auth github-oauth.github.com "${{ secrets.COMPOSER_GITHUB_TOKEN }}"
+          composer self-update --2
+          composer config --global --auth github-oauth.github.com "${{ github.token }}"
           test -f $GITHUB_WORKSPACE/.github/workflows/composer-additional.sh && source $GITHUB_WORKSPACE/.github/workflows/composer-additional.sh || true
           test -f $GITHUB_WORKSPACE/.github/workflows/composer-${MAGENTO_VERSION}.sh && source $GITHUB_WORKSPACE/.github/workflows/composer-${MAGENTO_VERSION}.sh || true
 
