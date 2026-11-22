@@ -1,0 +1,18 @@
+{
+    "name": "yireo/magento2-whoops-test-fixture",
+    "version": "1.0.0",
+    "description": "Test fixture for Yireo_Whoops: Adds frontend pages that throw errors for the Playwright tests. Do not install in production.",
+    "type": "magento2-module",
+    "require": {
+        "yireo/magento2-whoops": "*"
+    },
+    "license": "OSL-3.0",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Yireo\\WhoopsTestFixture\\": ""
+        }
+    }
+}
