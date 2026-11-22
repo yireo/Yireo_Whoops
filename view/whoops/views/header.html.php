@@ -5,6 +5,8 @@ use Whoops\Util\TemplateHelper;
 
 /** @var TemplateHelper $tpl */
 /** @var string[] $name */
+/** @var string $message */
+/** @var string|null $docref_url */
 /** @var int $code */
 /** @var string[] $previousMessages */
 /** @var int[] $previousCodes */
@@ -38,7 +40,7 @@ use Whoops\Util\TemplateHelper;
           <?php foreach ($previousMessages as $i => $previousMessage): ?>
             <li>
               <?= $tpl->escape($previousMessage) ?>
-              <span class="prev-exc-code">(<?= $previousCodes[$i] ?>)</span>
+              <span class="prev-exc-code">(<?= $tpl->escape($previousCodes[$i]) ?>)</span>
             </li>
           <?php endforeach; ?>
         </ul>
@@ -53,7 +55,7 @@ use Whoops\Util\TemplateHelper;
     <ul class="search-for-help">
       <?php if (!empty($docref_url)): ?>
       <li>
-        <a rel="noopener noreferrer" target="_blank" href="<?= $docref_url; ?>" title="Search for help in the PHP manual.">
+        <a rel="noopener noreferrer" target="_blank" href="<?= $tpl->escape($docref_url) ?>" title="Search for help in the PHP manual.">
           <!-- PHP icon by Icons Solid -->
           <!-- https://www.iconfinder.com/icons/322421/book_icon -->
           <!-- Free for commercial use -->
