@@ -23,14 +23,9 @@
     "components": [],
     "config": [
         {
-            "path": "yireo_whoops/settings/override",
-            "label": "Settings > Override Production Mode error reporting",
-            "description": ""
-        },
-        {
             "path": "yireo_whoops/settings/editor",
             "label": "Settings > Editor",
-            "description": ""
+            "description": "Editor to open files with from the Whoops page"
         }
     ],
     "tests": {
