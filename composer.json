@@ -20,14 +20,16 @@
         }
     ],
     "require": {
-        "filp/whoops": "^2.1",
-        "magento/framework": "^102.0|^103.0",
+        "php": ">=8.2 <8.6",
+        "filp/whoops": "^2.15",
+        "magento/framework": "^103.0",
         "magento/module-backend": "^102.0",
         "magento/module-config": "^101.2",
-        "php": ">=8.2 <8.6"
+        "psr/log": "^1.0 || ^2.0 || ^3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.5"
+        "phpunit/phpunit": "^10.5",
+        "yireo/magento2-integration-test-helper": "~0.0"
     },
     "repositories": {
         "magento": {
