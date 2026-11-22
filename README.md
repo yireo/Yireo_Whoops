@@ -29,38 +29,28 @@ Next, install the new module into Magento itself:
 
 Check whether the module is successfully installed in **Admin > Stores > Configuration > Yireo > Yireo Whoops**.
 
-### Manual copy
-We recommend `composer` to install this package. However, if you want a manual copy instead, these are the steps:
-* Upload the files in the `source/` folder to the folder `app/code/Yireo/Whoops` of your site
-* Run `php -f bin/magento module:enable Yireo_Whoops`
-* Run `php -f bin/magento setup:upgrade`
-* Flush the Magento cache
-
 ## Usage
-This module replaces the default error and exception handling of Magento 2 with [Whoops](https://filp.github.io/whoops/). If you want to know what Whoops is, check out their site. There is no further usage. This module replaces the default `Magento\Framework\App\Http` class with its own and then adds in Whoops. This means that whenever an exception or error is not caught in the code, it will be output using Whoops.
+This module adds [Whoops](https://filp.github.io/whoops/) to the error handling of Magento 2, through a plugin on `Magento\Framework\App\Http`. Whenever an exception or PHP error is not caught in the code, it is shown with Whoops.
+
+Whoops is only used in the **Developer Mode**. In the Default Mode and Production Mode, the regular Magento error handling is used, so no stack traces or server details are shown to visitors.
+
+- Exceptions are still logged to `var/log/exception.log` before Whoops renders them;
+- PHP errors (like a `TypeError`) are shown as the original error, not as a wrapping exception;
+- AJAX requests and requests that accept `application/json` get a JSON response instead of an HTML page;
+- Sensitive values (like the `Authorization` header and the session cookies) are hidden on the Whoops page. Add more keys via the DI argument `hiddenSuperglobalKeys` of `Yireo\Whoops\Plugin\HttpApp`;
+- Pick the editor to open files with in **Stores > Configuration > Yireo > Yireo Whoops**.
 
 You can test this yourself by adding some dummy code somewhere in Magento 2:
-
-```php
-trigger_error('test');
-```
-
-or:
 
 ```php
 throw new RuntimeException('test');
 ```
 
+## Upgrading to 1.0.0
+The setting **Override Production Mode error reporting** has been removed, because it showed full stack traces and server details to every visitor. Whoops is now only used in the Developer Mode.
+
 ## Testing
-This repository contains some PHPUnit tests:
-
-- Make sure Magento is installed with composer packages in `vendor/` (aka via `composer install`)
-- Next, navigate to the repository of this extension
-- Execute the following command, replacing `PATH_TO_MAGENTO` with the actual path to Magento:
-
-```bash
-phpunit -c dev/tests/unit/phpunit.xml --bootstrap PATH_TO_MAGENTO/vendor/autoload.php Test/Unit
-```
+This repository contains PHPUnit unit tests (`Test/Unit`), PHPUnit integration tests (`Test/Integration`) and Playwright tests (`Test/Playwright`). The Playwright tests need the fixture module `Yireo_WhoopsTestFixture` (in `Fixture/WhoopsTestFixture`), which adds pages that throw errors. Never install this fixture module in production.
 
 ## PWA compatibility
 This frontend extension will be completely replaced by React or Vue functionality, and therefore, this extension will not be made compatible with PWA.
