@@ -3,7 +3,7 @@
     <default>
         <yireo_whoops>
             <settings>
-                <override>0</override>
+                <editor></editor>
             </settings>
         </yireo_whoops>
     </default>

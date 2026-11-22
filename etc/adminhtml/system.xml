@@ -4,17 +4,14 @@
         <tab id="yireo" sortOrder="999" translate="label">
             <label>Yireo</label>
         </tab>
-        <section id="yireo_whoops" translate="label" sortOrder="342" showInDefault="1" showInWebsite="1" showInStore="1">
+        <section id="yireo_whoops" translate="label" sortOrder="342" showInDefault="1" showInWebsite="0" showInStore="0">
             <label>Yireo Whoops</label>
             <tab>yireo</tab>
             <resource>Yireo_Whoops::config</resource>
-            <group id="settings" translate="label" type="text" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="settings" translate="label comment" type="text" sortOrder="34" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Settings</label>
-                <field id="override" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                    <label>Override Production Mode error reporting</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="editor" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                <comment>Whoops is only used in the Developer Mode.</comment>
+                <field id="editor" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Editor</label>
                     <source_model>Yireo\Whoops\Model\Config\Source\Editor</source_model>
                 </field>
