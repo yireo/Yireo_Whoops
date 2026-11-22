@@ -6,59 +6,25 @@ use Magento\Framework\Data\OptionSourceInterface;
 
 class Editor implements OptionSourceInterface
 {
-
     /**
-     * Return array of options as value-label pairs
-     *
-     * @return array Format: array(array('value' => '<value>', 'label' => '<label>'), ...)
+     * @return array<int, array{value: string, label: \Magento\Framework\Phrase|string}>
      */
-    public function toOptionArray()
+    public function toOptionArray(): array
     {
         return [
-            [
-                'value' => '',
-                'label' => 'None'
-            ],
-            [
-                'value' => 'phpstorm',
-                'label' => 'PHPStorm'
-            ],
-            [
-                'value' => 'sublime',
-                'label' => 'Sublime'
-            ],
-            [
-                'value' => 'xdebug',
-                'label' => 'XDebug'
-            ],
-            [
-                'value' => 'vscode',
-                'label' => 'VSCode'
-            ],
-            [
-                'value' => 'emacs',
-                'label' => 'emacs'
-            ],
-            [
-                'value' => 'idea',
-                'label' => 'IDEA'
-            ],
-            [
-                'value' => 'macvim',
-                'label' => 'MacVim'
-            ],
-            [
-                'value' => 'textmate',
-                'label' => 'Textmate'
-            ],
-            [
-                'value' => 'atom',
-                'label' => 'Atom'
-            ],
-            [
-                'value' => 'espresso',
-                'label' => 'Espresso'
-            ]
+            ['value' => '', 'label' => __('None')],
+            ['value' => 'phpstorm', 'label' => 'PHPStorm'],
+            ['value' => 'idea', 'label' => 'IDEA'],
+            ['value' => 'vscode', 'label' => 'VSCode'],
+            ['value' => 'cursor', 'label' => 'Cursor'],
+            ['value' => 'sublime', 'label' => 'Sublime'],
+            ['value' => 'atom', 'label' => 'Atom'],
+            ['value' => 'emacs', 'label' => 'Emacs'],
+            ['value' => 'macvim', 'label' => 'MacVim'],
+            ['value' => 'netbeans', 'label' => 'NetBeans'],
+            ['value' => 'textmate', 'label' => 'TextMate'],
+            ['value' => 'espresso', 'label' => 'Espresso'],
+            ['value' => 'xdebug', 'label' => __('Xdebug (xdebug.file_link_format)')],
         ];
     }
 }
