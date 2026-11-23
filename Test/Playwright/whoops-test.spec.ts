@@ -26,7 +26,7 @@ test.describe('Whoops', function () {
             return;
         }
 
-        await expect(page.locator('.Whoops.container')).toBeVisible();
+        await expect(page.locator('.Whoops .exception')).toBeVisible();
         await expect(page.locator('.exc-title')).toContainText('RuntimeException');
         await expect(page.locator('.exc-message')).toContainText('Whoops fixture exception');
     });
@@ -41,7 +41,7 @@ test.describe('Whoops', function () {
             return;
         }
 
-        await expect(page.locator('.Whoops.container')).toBeVisible();
+        await expect(page.locator('.Whoops .exception')).toBeVisible();
         await expect(page.locator('.exc-title-primary')).toHaveText('Error');
         await expect(page.locator('.exc-message')).toContainText('Whoops fixture error');
     });
@@ -73,7 +73,7 @@ test.describe('Whoops', function () {
         await page.setExtraHTTPHeaders({'Authorization': 'Bearer whoopssecrettoken'});
         await page.goto(exceptionPath);
 
-        await expect(page.locator('.Whoops.container')).toBeVisible();
+        await expect(page.locator('.Whoops .exception')).toBeVisible();
         const content = await page.content();
         expect(content).not.toContain('whoopssecretsession');
         expect(content).not.toContain('whoopssecrettoken');
