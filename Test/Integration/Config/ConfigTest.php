@@ -20,4 +20,12 @@ class ConfigTest extends TestCase
     {
         $this->assertSame('phpstorm', Bootstrap::getObjectManager()->get(Config::class)->getEditor());
     }
+
+    /**
+     * @magentoConfigFixture default/yireo_whoops/settings/editor file_put_contents
+     */
+    public function testUnknownEditorIsIgnored(): void
+    {
+        $this->assertSame('', Bootstrap::getObjectManager()->get(Config::class)->getEditor());
+    }
 }

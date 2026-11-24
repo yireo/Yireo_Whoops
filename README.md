@@ -37,7 +37,11 @@ Whoops is only used in the **Developer Mode**. In the Default Mode and Productio
 - Exceptions are still logged to `var/log/exception.log` before Whoops renders them;
 - PHP errors (like a `TypeError`) are shown as the original error, not as a wrapping exception;
 - AJAX requests and requests that accept `application/json` get a JSON response instead of an HTML page;
-- Sensitive values (like the `Authorization` header and the session cookies) are hidden on the Whoops page. Add more keys via the DI argument `hiddenSuperglobalKeys` of `Yireo\Whoops\Plugin\HttpApp`;
+- When **Stores > Configuration > Advanced > Developer > Developer Client Restrictions > Allowed IPs** (`dev/restrict/allow_ips`) is set, Whoops is only shown to these IPs (or hostnames). Other visitors get the regular Magento error page;
+- Sensitive values (like the `Authorization` header, the session cookies, login passwords and environment variables with names like `*PASSWORD*`, `*SECRET*`, `*TOKEN*` or `*_KEY`) are hidden on the Whoops page. Add more keys via the DI argument `hiddenSuperglobalKeys` of `Yireo\Whoops\Plugin\HttpApp`, or change the regular expression in the DI argument `hiddenKeyPattern`;
+- The arguments of the functions in the stack trace are not shown, neither on the Whoops page nor in the JSON response, because they often contain passwords or other credentials;
+- Only the editors listed in the configuration are accepted. Any other value of `yireo_whoops/settings/editor` is ignored;
+- Once Whoops renders an error, it ends the request. Other plugins on `Magento\Framework\App\Http::catchException()` may not run;
 - Pick the editor to open files with in **Stores > Configuration > Yireo > Yireo Whoops**.
 
 You can test this yourself by adding some dummy code somewhere in Magento 2:

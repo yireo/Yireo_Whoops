@@ -4,32 +4,37 @@ namespace Yireo\Whoops\Test\Unit;
 
 use Error;
 use Exception;
+use Laminas\Stdlib\Parameters;
 use Magento\Framework\App\Bootstrap;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Http as HttpApp;
 use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\App\State;
+use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use TypeError;
-use Whoops\Handler\JsonResponseHandler;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run as WhoopsRunner;
 use Yireo\Whoops\Config\Config;
 use Yireo\Whoops\Exception\WrappedError;
+use Yireo\Whoops\Handler\SafeJsonResponseHandler;
+use Yireo\Whoops\Model\Config\Source\Editor;
 use Yireo\Whoops\Plugin\HttpApp as HttpAppPlugin;
 
 class HttpAppTest extends TestCase
 {
     private WhoopsRunner $whoopsRunner;
     private PrettyPageHandler $pageHandler;
-    private JsonResponseHandler $jsonHandler;
+    private SafeJsonResponseHandler $jsonHandler;
     private LoggerInterface $logger;
     private ScopeConfigInterface $scopeConfig;
     private State $appState;
     private HttpRequest $request;
+    private RemoteAddress $remoteAddress;
 
     protected function setUp(): void
     {
@@ -38,11 +43,12 @@ class HttpAppTest extends TestCase
         $this->whoopsRunner->writeToOutput(false);
         $this->whoopsRunner->sendHttpCode(false);
         $this->pageHandler = new PrettyPageHandler();
-        $this->jsonHandler = new JsonResponseHandler();
+        $this->jsonHandler = new SafeJsonResponseHandler();
         $this->logger = $this->createStub(LoggerInterface::class);
         $this->scopeConfig = $this->createStub(ScopeConfigInterface::class);
         $this->appState = $this->createStub(State::class);
         $this->request = $this->createStub(HttpRequest::class);
+        $this->remoteAddress = $this->createStub(RemoteAddress::class);
     }
 
     public function testReturnsOriginalArguments(): void
@@ -97,6 +103,19 @@ class HttpAppTest extends TestCase
 
         $this->assertSame([$this->jsonHandler], $this->whoopsRunner->getHandlers());
         $this->assertTrue($this->jsonHandler->addTraceToOutput());
+    }
+
+    public function testLaunchDoesNotCatchErrorsOutsideDeveloperMode(): void
+    {
+        $this->appState->method('getMode')->willReturn(State::MODE_DEFAULT);
+        $error = new Error('test');
+
+        try {
+            $this->getPlugin()->aroundLaunch($this->getSubject(), fn () => throw $error);
+            $this->fail('No error thrown');
+        } catch (Error $caught) {
+            $this->assertSame($error, $caught);
+        }
     }
 
     public function testJsonHandlerIsUsedWhenJsonIsAccepted(): void
@@ -165,20 +184,90 @@ class HttpAppTest extends TestCase
 
     public function testUnknownEditorIsIgnored(): void
     {
-        $this->scopeConfig->method('getValue')->willReturn('notepad');
+        $this->scopeConfig->method('getValue')->willReturnMap([['yireo_whoops/settings/editor', 'default', null, 'notepad']]);
 
         $this->getPlugin()->beforeCatchException($this->getSubject(), $this->getBootstrap(true), new Exception('test'));
 
         $this->assertSame([$this->pageHandler], $this->whoopsRunner->getHandlers());
     }
 
-    public function testFailingConfigDoesNotStopWhoops(): void
+    public function testFailingConfigDisablesWhoops(): void
     {
         $this->scopeConfig->method('getValue')->willThrowException(new RuntimeException('Database is down'));
 
         $this->getPlugin()->beforeCatchException($this->getSubject(), $this->getBootstrap(true), new Exception('test'));
 
+        $this->assertSame([], $this->whoopsRunner->getHandlers());
+    }
+
+    public function testCallableEditorIsIgnored(): void
+    {
+        $this->scopeConfig->method('getValue')->willReturnMap([
+            ['yireo_whoops/settings/editor', 'default', null, 'file_put_contents'],
+        ]);
+
+        $this->getPlugin()->beforeCatchException($this->getSubject(), $this->getBootstrap(true), new Exception('test'));
+
+        $this->assertFalse($this->pageHandler->getEditorHref('/foo.php', 42));
+    }
+
+    public function testWhoopsIsUsedWhenNoIpsAreRestricted(): void
+    {
+        $this->remoteAddress->method('getRemoteAddress')->willReturn('203.0.113.1');
+
+        $this->getPlugin()->beforeCatchException($this->getSubject(), $this->getBootstrap(true), new Exception('test'));
+
         $this->assertSame([$this->pageHandler], $this->whoopsRunner->getHandlers());
+    }
+
+    public function testWhoopsIsUsedForAllowedIp(): void
+    {
+        $this->scopeConfig->method('getValue')->willReturnMap([
+            ['dev/restrict/allow_ips', 'default', null, '127.0.0.1, 203.0.113.1'],
+        ]);
+        $this->remoteAddress->method('getRemoteAddress')->willReturn('203.0.113.1');
+
+        $this->getPlugin()->beforeCatchException($this->getSubject(), $this->getBootstrap(true), new Exception('test'));
+
+        $this->assertSame([$this->pageHandler], $this->whoopsRunner->getHandlers());
+    }
+
+    public function testWhoopsIsUsedForAllowedHost(): void
+    {
+        $this->scopeConfig->method('getValue')->willReturnMap([
+            ['dev/restrict/allow_ips', 'default', null, '127.0.0.1,magento.test'],
+        ]);
+        $this->remoteAddress->method('getRemoteAddress')->willReturn('203.0.113.1');
+        $this->request->method('getHttpHost')->willReturn('magento.test');
+
+        $this->getPlugin()->beforeCatchException($this->getSubject(), $this->getBootstrap(true), new Exception('test'));
+
+        $this->assertSame([$this->pageHandler], $this->whoopsRunner->getHandlers());
+    }
+
+    public function testWhoopsIsNotUsedForOtherIp(): void
+    {
+        $this->scopeConfig->method('getValue')->willReturnMap([
+            ['dev/restrict/allow_ips', 'default', null, '127.0.0.1'],
+        ]);
+        $this->remoteAddress->method('getRemoteAddress')->willReturn('203.0.113.1');
+        $this->request->method('getHttpHost')->willReturn('magento.test');
+
+        $this->getPlugin()->beforeCatchException($this->getSubject(), $this->getBootstrap(true), new Exception('test'));
+
+        $this->assertSame([], $this->whoopsRunner->getHandlers());
+    }
+
+    public function testWhoopsIsNotUsedWithoutRemoteAddressWhenIpsAreRestricted(): void
+    {
+        $this->scopeConfig->method('getValue')->willReturnMap([
+            ['dev/restrict/allow_ips', 'default', null, '127.0.0.1'],
+        ]);
+        $this->remoteAddress->method('getRemoteAddress')->willReturn(false);
+
+        $this->getPlugin()->beforeCatchException($this->getSubject(), $this->getBootstrap(true), new Exception('test'));
+
+        $this->assertSame([], $this->whoopsRunner->getHandlers());
     }
 
     public function testSuperglobalKeysAreHidden(): void
@@ -192,6 +281,44 @@ class HttpAppTest extends TestCase
         $masked = $method->invoke($this->pageHandler, ['HTTP_AUTHORIZATION' => 'Bearer secret'], '_SERVER');
 
         $this->assertNotSame('Bearer secret', $masked['HTTP_AUTHORIZATION']);
+    }
+
+    #[DataProvider('getHiddenKeyPatternData')]
+    public function testKeysMatchingPatternAreHidden(string $key, bool $hidden): void
+    {
+        $this->request->method('getServer')->willReturn(new Parameters([$key => 'value']));
+        $this->request->method('getEnv')->willReturn(new Parameters([$key => 'value']));
+        $plugin = $this->getPlugin([], '/PASS|SECRET|TOKEN|_KEY$|^KEY|AUTH|CREDENTIAL|DSN|PRIVATE|DATABASE_URL/i');
+        $plugin->beforeCatchException($this->getSubject(), $this->getBootstrap(true), new Exception('test'));
+
+        $method = new \ReflectionMethod(PrettyPageHandler::class, 'masked');
+        foreach (['_SERVER', '_ENV'] as $superglobalName) {
+            $masked = $method->invoke($this->pageHandler, [$key => 'value'], $superglobalName);
+            $this->assertSame($hidden ? '*****' : 'value', $masked[$key], $superglobalName . ' ' . $key);
+        }
+    }
+
+    /**
+     * @return array<string, array{0: string, 1: bool}>
+     */
+    public static function getHiddenKeyPatternData(): array
+    {
+        return [
+            'password' => ['MYSQL_PASSWORD', true],
+            'secret' => ['APP_SECRET', true],
+            'token' => ['GITHUB_TOKEN', true],
+            'key suffix' => ['MAGENTO_CRYPT_KEY', true],
+            'key prefix' => ['KEY_FILE', true],
+            'auth' => ['REDIRECT_HTTP_AUTHORIZATION', true],
+            'credential' => ['AWS_CREDENTIALS_FILE', true],
+            'dsn' => ['SENTRY_DSN', true],
+            'private' => ['PRIVATE_REPO_LOGIN', true],
+            'database url' => ['DATABASE_URL', true],
+            'lowercase' => ['db_password', true],
+            'host' => ['HTTP_HOST', false],
+            'keyboard' => ['MONKEYBOARD', false],
+            'path' => ['PATH', false],
+        ];
     }
 
     public function testLaunchResultIsReturned(): void
@@ -259,17 +386,19 @@ class HttpAppTest extends TestCase
     /**
      * @param array<string, string[]> $hiddenSuperglobalKeys
      */
-    private function getPlugin(array $hiddenSuperglobalKeys = []): HttpAppPlugin
+    private function getPlugin(array $hiddenSuperglobalKeys = [], string $hiddenKeyPattern = ''): HttpAppPlugin
     {
         return new HttpAppPlugin(
             $this->whoopsRunner,
             $this->pageHandler,
             $this->jsonHandler,
-            new Config($this->scopeConfig),
+            new Config($this->scopeConfig, new Editor()),
             $this->logger,
             $this->appState,
             $this->request,
-            $hiddenSuperglobalKeys
+            $this->remoteAddress,
+            $hiddenSuperglobalKeys,
+            $hiddenKeyPattern
         );
     }
 

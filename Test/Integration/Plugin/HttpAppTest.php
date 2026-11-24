@@ -5,6 +5,7 @@ namespace Yireo\Whoops\Test\Integration\Plugin;
 use Exception;
 use Magento\Framework\App\Bootstrap as AppBootstrap;
 use Magento\Framework\App\Http;
+use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
@@ -73,6 +74,59 @@ class HttpAppTest extends TestCase
 
         $this->assertNotSame('Bearer secret', $maskedEnv['HTTP_AUTHORIZATION']);
         $this->assertNotSame('admin=secret', $maskedEnv['HTTP_COOKIE']);
+    }
+
+    public function testDiConfigurationHidesCredentials(): void
+    {
+        $request = Bootstrap::getObjectManager()->get(HttpRequest::class);
+        $request->getServer()->set('MYSQL_PASSWORD', 'secret');
+        try {
+            $this->getPlugin()->beforeCatchException(
+                $this->createStub(Http::class),
+                $this->getAppBootstrap(true),
+                new Exception('Whoops integration test')
+            );
+        } finally {
+            $request->getServer()->offsetUnset('MYSQL_PASSWORD');
+        }
+
+        $handler = $this->whoopsRunner->getHandlers()[0];
+        $masked = new ReflectionMethod(PrettyPageHandler::class, 'masked');
+
+        $server = $masked->invoke(
+            $handler,
+            ['MYSQL_PASSWORD' => 'secret', 'REDIRECT_HTTP_AUTHORIZATION' => 'Bearer secret', 'HTTP_HOST' => 'example.com'],
+            '_SERVER'
+        );
+        $this->assertNotSame('secret', $server['MYSQL_PASSWORD']);
+        $this->assertNotSame('Bearer secret', $server['REDIRECT_HTTP_AUTHORIZATION']);
+        $this->assertSame('example.com', $server['HTTP_HOST']);
+
+        $post = $masked->invoke(
+            $handler,
+            ['login' => ['username' => 'jane', 'password' => 'secret'], 'form_key' => 'abc', 'qty' => '1'],
+            '_POST'
+        );
+        $this->assertSame('***', $post['login']);
+        $this->assertNotSame('abc', $post['form_key']);
+        $this->assertSame('1', $post['qty']);
+
+        $session = $masked->invoke($handler, ['admin' => ['user' => 'admin']], '_SESSION');
+        $this->assertSame('***', $session['admin']);
+    }
+
+    /**
+     * @magentoConfigFixture default/dev/restrict/allow_ips 192.0.2.1
+     */
+    public function testWhoopsIsNotUsedForClientOutsideAllowedIps(): void
+    {
+        $this->getPlugin()->beforeCatchException(
+            $this->createStub(Http::class),
+            $this->getAppBootstrap(true),
+            new Exception('Whoops integration test')
+        );
+
+        $this->assertSame([], $this->whoopsRunner->getHandlers());
     }
 
     private function getPlugin(): HttpAppPlugin

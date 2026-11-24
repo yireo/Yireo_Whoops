@@ -5,19 +5,21 @@ namespace Yireo\Whoops\Plugin;
 use Closure;
 use Exception;
 use InvalidArgumentException;
+use Laminas\Stdlib\ParametersInterface;
 use Magento\Framework\App\Bootstrap;
 use Magento\Framework\App\Http;
 use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\App\State;
+use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Psr\Log\LoggerInterface;
 use Throwable;
 use Whoops\Handler\HandlerInterface;
-use Whoops\Handler\JsonResponseHandler;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run as WhoopsRunner;
 use Yireo\Whoops\Config\Config;
 use Yireo\Whoops\Exception\WrappedError;
+use Yireo\Whoops\Handler\SafeJsonResponseHandler;
 
 class HttpApp
 {
@@ -27,12 +29,14 @@ class HttpApp
     public function __construct(
         private readonly WhoopsRunner $whoopsRunner,
         private readonly PrettyPageHandler $pageHandler,
-        private readonly JsonResponseHandler $jsonHandler,
+        private readonly SafeJsonResponseHandler $jsonHandler,
         private readonly Config $config,
         private readonly LoggerInterface $logger,
         private readonly State $appState,
         private readonly HttpRequest $request,
-        private readonly array $hiddenSuperglobalKeys = []
+        private readonly RemoteAddress $remoteAddress,
+        private readonly array $hiddenSuperglobalKeys = [],
+        private readonly string $hiddenKeyPattern = ''
     ) {
     }
 
@@ -41,7 +45,7 @@ class HttpApp
      */
     public function beforeCatchException(Http $subject, Bootstrap $bootstrap, Exception $exception): array
     {
-        if (!$bootstrap->isDeveloperMode()) {
+        if (!$bootstrap->isDeveloperMode() || !$this->isClientAllowed()) {
             return [$bootstrap, $exception];
         }
 
@@ -62,10 +66,14 @@ class HttpApp
      */
     public function aroundLaunch(Http $subject, Closure $proceed): ResponseInterface
     {
+        if (!$this->isDeveloperMode()) {
+            return $proceed();
+        }
+
         try {
             return $proceed();
         } catch (Throwable $throwable) {
-            if ($throwable instanceof Exception || !$this->isDeveloperMode()) {
+            if ($throwable instanceof Exception) {
                 throw $throwable;
             }
 
@@ -85,6 +93,25 @@ class HttpApp
         $this->addCustomViewsFolderToResourcePaths();
 
         return $this->pageHandler;
+    }
+
+    private function isClientAllowed(): bool
+    {
+        try {
+            $allowedIps = $this->config->getAllowedIps();
+            if ($allowedIps === []) {
+                return true;
+            }
+
+            $remoteAddress = (string)$this->remoteAddress->getRemoteAddress();
+            if ($remoteAddress !== '' && in_array($remoteAddress, $allowedIps, true)) {
+                return true;
+            }
+
+            return in_array((string)$this->request->getHttpHost(), $allowedIps, true);
+        } catch (Throwable) {
+            return false;
+        }
     }
 
     private function isJsonRequest(): bool
@@ -139,6 +166,41 @@ class HttpApp
                 $this->pageHandler->hideSuperglobalKey($superglobalName, $key);
             }
         }
+
+        foreach ($this->getKeysMatchingHiddenPattern() as $superglobalName => $keys) {
+            foreach ($keys as $key) {
+                $this->pageHandler->hideSuperglobalKey($superglobalName, $key);
+            }
+        }
+    }
+
+    /**
+     * @return array<string, string[]>
+     */
+    private function getKeysMatchingHiddenPattern(): array
+    {
+        if ($this->hiddenKeyPattern === '') {
+            return [];
+        }
+
+        $superglobals = [
+            '_SERVER' => $this->request->getServer(),
+            '_ENV' => $this->request->getEnv(),
+        ];
+
+        $matchingKeys = [];
+        foreach ($superglobals as $superglobalName => $superglobal) {
+            if (!$superglobal instanceof ParametersInterface) {
+                continue;
+            }
+
+            $keys = array_map('strval', array_keys($superglobal->toArray()));
+            $matchingKeys[$superglobalName] = array_values(
+                preg_grep($this->hiddenKeyPattern, $keys) ?: []
+            );
+        }
+
+        return $matchingKeys;
     }
 
     private function addCustomViewsFolderToResourcePaths(): void
