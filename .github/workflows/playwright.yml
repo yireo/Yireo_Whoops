@@ -19,7 +19,7 @@ jobs:
     outputs:
       has_tests: ${{ steps.check.outputs.has_tests }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           sparse-checkout: Test/Playwright
 
@@ -106,7 +106,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 1
 
@@ -160,7 +160,7 @@ jobs:
 
       - name: Restore Composer cache
         if: github.event.pull_request.head.repo.fork != true && !env.ACT
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: /tmp/composer-cache
           key: composer-playwright-${{ env.MAGENTO_VERSION }}-${{ hashFiles('composer.json') }}
@@ -254,7 +254,7 @@ jobs:
 
       - name: Restore npm cache
         if: ${{ !env.ACT }}
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: ~/.npm
           key: npm-${{ steps.npm-cache-key.outputs.hash }}
