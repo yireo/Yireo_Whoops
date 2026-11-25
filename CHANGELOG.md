@@ -6,6 +6,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 25 November 2026
+### Removed
+- The "Override Production Mode error reporting" setting is gone: Whoops now only runs in developer mode, so production visitors never get full error pages with server data, environment and cookies (breaking)
+- PHP 8.1 support dropped; now requires PHP 8.2-8.5, Magento 2.4 (framework 103) and filp/whoops 2.15 or newer
+
+### Added
+- PHP 8.5 support
+- Cursor and NetBeans as editor options
+- AJAX and JSON requests get a JSON error response instead of an HTML page
+- Whoops also respects `dev/restrict/allow_ips` (IPs or hostnames) on top of developer mode
+
+### Fixed
+- Arbitrary PHP function execution via the editor setting: only editors from the source list are accepted
+- Stack frame arguments are no longer exposed on the HTML page or in the JSON trace
+- More credentials masked: HTTP authorization headers, passwords, payment and form_key POST data, session and persistent cookies, admin/customer/checkout session data and sensitive server/env keys
+- Exceptions are logged before Whoops displays them
+- PHP errors outside developer mode are no longer wrapped by Whoops
+- Reading the editor setting no longer fails when the configuration cannot be loaded
+- Error page header synced with Whoops 2.18, with the docref URL and previous exception codes escaped
+- Missing ACL resource for the configuration section added
+
 ## [0.2.5] - 01 June 2026
 - Remove `setup_version` from XML
 - Properly set version of symfony/var-dumper
