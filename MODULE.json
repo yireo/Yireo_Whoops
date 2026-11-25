@@ -16,6 +16,7 @@
     "modules": [
         "Magento_Backend",
         "Magento_Config",
+        "Magento_Csp",
         "Magento_Directory",
         "Magento_Store",
         "Magento_Theme"
@@ -25,13 +26,13 @@
         {
             "path": "yireo_whoops/settings/editor",
             "label": "Settings > Editor",
-            "description": "Editor to open files with from the Whoops page"
+            "description": ""
         }
     ],
     "tests": {
-        "unit": 3,
-        "integration": 0,
-        "functional": 0
+        "unit": 36,
+        "integration": 9,
+        "functional": 4
     },
     "phpcs_severity": "9",
     "phpstan_level": "1"
