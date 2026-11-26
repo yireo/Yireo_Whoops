@@ -4,9 +4,56 @@
         <plugin name="Yireo_Whoops::HttpApp" type="Yireo\Whoops\Plugin\HttpApp" />
     </type>
 
+    <type name="Yireo\Whoops\Config\Config">
+        <arguments>
+            <argument name="editorSource" xsi:type="object">Yireo\Whoops\Model\Config\Source\Editor</argument>
+        </arguments>
+    </type>
+
     <type name="Yireo\Whoops\Plugin\HttpApp">
         <arguments>
             <argument name="pageHandler" xsi:type="object">Whoops\Handler\PrettyPageHandler</argument>
+            <argument name="remoteAddress" xsi:type="object">Magento\Framework\HTTP\PhpEnvironment\RemoteAddress</argument>
+            <argument name="request" xsi:type="object">Magento\Framework\App\Request\Http</argument>
+            <argument name="appState" xsi:type="object">Magento\Framework\App\State</argument>
+            <argument name="hiddenKeyPattern" xsi:type="string">/PASS|SECRET|TOKEN|_KEY$|^KEY|AUTH|CREDENTIAL|DSN|PRIVATE|DATABASE_URL/i</argument>
+            <argument name="hiddenSuperglobalKeys" xsi:type="array">
+                <item name="_SERVER" xsi:type="array">
+                    <item name="HTTP_AUTHORIZATION" xsi:type="string">HTTP_AUTHORIZATION</item>
+                    <item name="REDIRECT_HTTP_AUTHORIZATION" xsi:type="string">REDIRECT_HTTP_AUTHORIZATION</item>
+                    <item name="HTTP_COOKIE" xsi:type="string">HTTP_COOKIE</item>
+                    <item name="PHP_AUTH_USER" xsi:type="string">PHP_AUTH_USER</item>
+                    <item name="PHP_AUTH_PW" xsi:type="string">PHP_AUTH_PW</item>
+                    <item name="PHP_AUTH_DIGEST" xsi:type="string">PHP_AUTH_DIGEST</item>
+                </item>
+                <item name="_ENV" xsi:type="array">
+                    <item name="HTTP_AUTHORIZATION" xsi:type="string">HTTP_AUTHORIZATION</item>
+                    <item name="REDIRECT_HTTP_AUTHORIZATION" xsi:type="string">REDIRECT_HTTP_AUTHORIZATION</item>
+                    <item name="HTTP_COOKIE" xsi:type="string">HTTP_COOKIE</item>
+                    <item name="PHP_AUTH_USER" xsi:type="string">PHP_AUTH_USER</item>
+                    <item name="PHP_AUTH_PW" xsi:type="string">PHP_AUTH_PW</item>
+                    <item name="PHP_AUTH_DIGEST" xsi:type="string">PHP_AUTH_DIGEST</item>
+                </item>
+                <item name="_POST" xsi:type="array">
+                    <item name="login" xsi:type="string">login</item>
+                    <item name="password" xsi:type="string">password</item>
+                    <item name="current_password" xsi:type="string">current_password</item>
+                    <item name="password_confirmation" xsi:type="string">password_confirmation</item>
+                    <item name="payment" xsi:type="string">payment</item>
+                    <item name="form_key" xsi:type="string">form_key</item>
+                </item>
+                <item name="_COOKIE" xsi:type="array">
+                    <item name="PHPSESSID" xsi:type="string">PHPSESSID</item>
+                    <item name="admin" xsi:type="string">admin</item>
+                    <item name="form_key" xsi:type="string">form_key</item>
+                    <item name="persistent_shopping_cart" xsi:type="string">persistent_shopping_cart</item>
+                </item>
+                <item name="_SESSION" xsi:type="array">
+                    <item name="admin" xsi:type="string">admin</item>
+                    <item name="customer_base" xsi:type="string">customer_base</item>
+                    <item name="checkout" xsi:type="string">checkout</item>
+                </item>
+            </argument>
         </arguments>
     </type>
 </config>

@@ -1,6 +1,6 @@
 {
     "name": "yireo/magento2-whoops",
-    "version": "0.2.5",
+    "version": "0.2.6",
     "license": "OSL-3.0",
     "type": "magento2-module",
     "homepage": "https://www.yireo.com/software/magento-extensions/extension/153-whoops/category/2",
@@ -20,10 +20,14 @@
         }
     ],
     "require": {
-        "filp/whoops": "^2.1",
+        "ext-pcre": "*",
+        "filp/whoops": "^2.15",
         "magento/framework": "^102.0|^103.0",
         "magento/module-backend": "^102.0",
         "magento/module-config": "^101.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5|^10.5"
     },
     "repositories": {
         "magento": {

@@ -12,6 +12,7 @@
                 <label>Settings</label>
                 <field id="override" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Override Production Mode error reporting</label>
+                    <comment>Deprecated: This setting is ignored since version 0.2.6 for security reasons. Whoops is only used in the Developer Mode.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="editor" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
