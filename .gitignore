@@ -53,3 +53,4 @@ pub/
 !/composer.json
 !/composer.lock
 !/.gitignore
+.yireo-extension-builder.json
