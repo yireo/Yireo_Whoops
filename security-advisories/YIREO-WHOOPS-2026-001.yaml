@@ -1,7 +1,7 @@
 schema_version: "1.6.0"
 id: YIREO-WHOOPS-2026-001
 published: "2026-11-25T00:00:00Z"
-modified: "2026-11-25T00:00:00Z"
+modified: "2026-11-26T00:00:00Z"
 aliases: []
 summary: Editor setting allows arbitrary PHP callables to be executed for every stack frame
 details: >
@@ -10,7 +10,7 @@ details: >
   the file path and line number of every stack frame. A user with access to the configuration (or
   anyone able to write this value to core_config_data) could set it to a PHP function such as
   file_put_contents, which overwrote the source files of the frames whenever an error page was
-  rendered. Version 1.0.0 only accepts editor values offered by the source model.
+  rendered. Versions 0.2.6 and 1.0.0 only accept editor values offered by the source model.
 severity:
   - type: CVSS_V3
     score: "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:N/I:H/A:H"
@@ -22,7 +22,7 @@ affected:
       - type: ECOSYSTEM
         events:
           - introduced: "0"
-          - fixed: "1.0.0"
+          - fixed: "0.2.6"
 references:
   - type: PACKAGE
     url: https://github.com/yireo/Yireo_Whoops

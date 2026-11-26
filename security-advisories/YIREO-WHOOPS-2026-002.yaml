@@ -1,7 +1,7 @@
 schema_version: "1.6.0"
 id: YIREO-WHOOPS-2026-002
 published: "2026-11-25T00:00:00Z"
-modified: "2026-11-25T00:00:00Z"
+modified: "2026-11-26T00:00:00Z"
 aliases: []
 summary: Whoops error pages expose credentials, session data and frame arguments to visitors
 details: >
@@ -10,9 +10,10 @@ details: >
   environment variables, cookies, session data, POST data and HTTP authorization headers, allowing
   an unauthenticated visitor who triggers an error to read credentials and session secrets. Even in
   developer mode, several sensitive values were not masked. Version 1.0.0 removes the override
-  setting so Whoops only runs in developer mode, respects dev/restrict/allow_ips, removes frame
-  arguments from the HTML page and JSON trace, and masks authorization headers, passwords, payment
-  and form_key data, session cookies and session contents.
+  setting and version 0.2.6 ignores it, so Whoops only runs in developer mode. Both versions respect
+  dev/restrict/allow_ips, remove frame arguments from the HTML page (and in 1.0.0 also from the JSON
+  trace), and mask authorization headers, passwords, payment and form_key data, session cookies and
+  session contents.
 severity:
   - type: CVSS_V3
     score: "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N"
@@ -24,7 +25,7 @@ affected:
       - type: ECOSYSTEM
         events:
           - introduced: "0"
-          - fixed: "1.0.0"
+          - fixed: "0.2.6"
 references:
   - type: PACKAGE
     url: https://github.com/yireo/Yireo_Whoops
